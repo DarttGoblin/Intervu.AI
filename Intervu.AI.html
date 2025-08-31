@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="icon" type="image/png" href="Intervu.AI.png">
+        <link rel="icon" type="image/jpg" href="Intervu.AI.Media/Intervu.AI_no_bg.png">
         <link rel="stylesheet" href="Intervu.AI.css">
         <title>Intervu.AI</title>
     </head>
@@ -28,7 +28,7 @@
             <div class="timer-container">
                 <span class="timer-span">
                     <i class="fa-solid fa-clock"></i>
-                    <span class="time-span"><span class="minutes">30</span>:<span class="seconds">00</span></span>
+                    <span class="time-span"><span class="minutes">00</span>:<span class="seconds">00</span></span>
                 </span>
             </div>
         </nav>
@@ -43,10 +43,24 @@
             <div class="text-container"></div>
         </section>
 
-        <button class="start-interview">Start The Interview</button>
-
+        <div class="start-container">
+            <div class="selects-container">
+                <select class="start-select field-select"></select>
+                <select class="start-select speciality-select"><option value="Choose a speciality">Choose a speciality</option></select>
+                <select class="start-select duration-select">
+                    <option value="Choose a duration">Choose a duration</option>
+                    <option value="15min">15min</option>
+                    <option value="30min">30min</option>
+                    <option value="45min">45min</option>
+                </select>
+            </div>
+            <button class="start-interview">Start The Interview</button>
+        </div>
+        
         <div class="video-container"></div>
 
+        <script src="Intervu.AI.Scripts/functions.js"></script>
+        <script src="Intervu.AI.Scripts/main_functions.js"></script>
         <script src="Intervu.AI.js"></script>
     </body>
 </html>
