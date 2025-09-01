@@ -10,11 +10,12 @@ function TTS(text) {
         const audio = new Audio(url);
         audio.playbackRate = 1.3;
         audio.play();
-        SlowTyping(text.split(""), text_container);
+        SlowTyping(text.split(""), text_container_span);
         bot_container.classList.add('glowing'); 
         audio.addEventListener("ended", () => {
             bot_container.classList.remove('glowing');
             StartRecording();
+            FinishButton();
         });
     })
     .catch(err => console.error(err));
@@ -119,32 +120,10 @@ function Timer() {
     }, 1000);
 }
 
-function MovableVideo() {
-    let offsetX, offsetY, isDragging = false;
-
-    video_container.addEventListener("mousedown", e => {
-        isDragging = true;
-        offsetX = e.clientX - video_container.offsetLeft;
-        offsetY = e.clientY - video_container.offsetTop;
-    });
-
-    document.addEventListener("mousemove", e => {
-    if (isDragging) {
-        video_container.style.position = "absolute";
-        video_container.style.left = (e.clientX - offsetX) + "px";
-        video_container.style.top = (e.clientY - offsetY) + "px";
-    }
-    });
-
-    document.addEventListener("mouseup", () => {
-        isDragging = false;
-    });
-}
-
-function SlowTyping(samples_letters, location) {
-    for (var i = 0; i < samples_letters.length; i++) {
+function SlowTyping(text_letters, element) {
+    for (var i = 0; i < text_letters.length; i++) {
         (function(index) {
-            setTimeout(() => { location.innerHTML += samples_letters[index]; }, 50 * index);
+            setTimeout(() => { element.textContent += text_letters[index]; }, 50 * index);
         })(i);
     }
 }
@@ -187,9 +166,37 @@ function StartRecording() {
     console.log('recording');
 }
 
-function StopRecording() {
-    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+function FinishButton() {
+    const finished = document.createElement('button');
+    finished.textContent = 'Im finished';
+    finished.classList.add('finished');
+    text_container.appendChild(finished);
+
+    finished.onclick = function() {
         mediaRecorder.stop();
-        console.log('record');
+        console.log('record has finished');
+        text_container.innerHTML = '';
     }
 }
+
+// function MovableVideo() {
+//     let offsetX, offsetY, isDragging = false;
+
+//     video_container.addEventListener("mousedown", e => {
+//         isDragging = true;
+//         offsetX = e.clientX - video_container.offsetLeft;
+//         offsetY = e.clientY - video_container.offsetTop;
+//     });
+
+//     document.addEventListener("mousemove", e => {
+//     if (isDragging) {
+//         video_container.style.position = "absolute";
+//         video_container.style.left = (e.clientX - offsetX) + "px";
+//         video_container.style.top = (e.clientY - offsetY) + "px";
+//     }
+//     });
+
+//     document.addEventListener("mouseup", () => {
+//         isDragging = false;
+//     });
+// }

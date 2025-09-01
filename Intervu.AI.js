@@ -1,6 +1,7 @@
 const bot_container = document.querySelector('.bot-container');
 const process_block = document.querySelectorAll('.process-block');
 const start_container = document.querySelector('.start-container');
+const text_container_span = document.querySelector('.text-container-span');
 const start_interview = document.querySelector('.start-interview');
 const field_select = document.querySelector('.field-select');
 const speciality_select = document.querySelector('.speciality-select');
@@ -75,7 +76,7 @@ start_interview.onclick = function() {
     let waiting = setInterval(() => {
         if (begin) {
             Timer();
-            MovableVideo();
+            // MovableVideo();
             TTS(initial_speech);
             clearInterval(waiting);
         }

@@ -97,19 +97,39 @@ i {
     box-shadow: 0 0 10px rgba(0, 153, 255, 0.6),
                 0 0 20px rgba(128, 0, 255, 0.4),
                 0 0 30px rgba(0, 153, 255, 0.3);
-    animation: glow 1s ease-in-out infinite alternate;
+    animation: glow 3s ease-in-out infinite alternate;
 }
 
 @keyframes glow {
     0% {
-        box-shadow: 0 0 10px rgba(0, 153, 255, 0.6),
-                    0 0 20px rgba(128, 0, 255, 0.4),
-                    0 0 30px rgba(0, 153, 255, 0.3);
+        box-shadow: 0 0 10px rgb(200, 80, 80),
+                    0 0 20px rgb(200, 60, 200),
+                    0 0 30px rgb(100, 90, 200);
+    }
+    20% {
+        box-shadow: 0 0 20px rgb(90, 200, 210),
+                    0 0 30px rgb(90, 210, 140),
+                    0 0 40px rgb(200, 210, 90);
+    }
+    40% {
+        box-shadow: 0 0 30px rgb(210, 150, 90),
+                    0 0 40px rgb(200, 90, 90),
+                    0 0 50px rgb(200, 80, 80);
+    }
+    60% {
+        box-shadow: 0 0 40px rgb(200, 60, 200),
+                    0 0 50px rgb(100, 90, 200),
+                    0 0 60px rgb(90, 200, 210);
+    }
+    80% {
+        box-shadow: 0 0 50px rgb(90, 210, 140),
+                    0 0 60px rgb(200, 210, 90),
+                    0 0 70px rgb(210, 150, 90);
     }
     100% {
-        box-shadow: 0 0 30px rgba(0, 153, 255, 0.8),
-                    0 0 60px rgba(128, 0, 255, 0.6),
-                    0 0 90px rgba(0, 153, 255, 0.4);
+        box-shadow: 0 0 60px rgb(200, 80, 80),
+                    0 0 70px rgb(200, 60, 200),
+                    0 0 80px rgb(100, 90, 200);
     }
 }
 
@@ -136,8 +156,24 @@ i {
 }
 
 .text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-self: center;
+    gap: 20px;
     width: 400px;
     font-size: 22px;
+}
+
+.finished {
+    width: fit-content;
+    padding: 10px 30px;
+    cursor: pointer;
+    font-size: 20px;
+    background-color: var(--main-color);
+    color: white;
+    border: none;
+    border-radius: var(--main-border-radius);
 }
 
 .start-container {
