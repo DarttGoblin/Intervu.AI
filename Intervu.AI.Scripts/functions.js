@@ -1,3 +1,66 @@
+function TTS(text) {
+    fetch("http://127.0.0.1:5000/tts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+    })
+    .then(res => res.blob())
+    .then(blob => {
+        const url = URL.createObjectURL(blob);
+        const audio = new Audio(url);
+        audio.playbackRate = 1.3;
+        audio.play();
+        SlowTyping(text.split(""), text_container);
+        bot_container.classList.add('glowing'); 
+        audio.addEventListener("ended", () => {
+            bot_container.classList.remove('glowing');
+            StartRecording();
+        });
+    })
+    .catch(err => console.error(err));
+}
+
+function STT(audio) {
+    const formData = new FormData();
+    formData.append("audio", audio, "recorded_audio.webm");
+
+    fetch("http://127.0.0.1:5000/stt", {
+        method: "POST",
+        body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+        EvaluateUserResponse(data.text);
+    })
+    .catch(err => console.error("STT error:", err));
+}
+
+function EvaluateUserResponse(question, answer) {
+    if (initial_question) {
+        question = initial_speech;
+        initial_question = false;
+    }
+
+    fetch("http://127.0.0.1:5000/evaluate", {
+        method: "POST",
+        body: JSON.stringify({ question, answer }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => res.json())
+    .then(data => {
+        console.log('score: ', data.score);
+        console.log('explanation: ', data.explanation);
+        ReplyToCondidate(question_index);
+    })
+    .catch(err => console.error("STT error:", err));
+}
+
+function ReplyToCondidate(index) {
+    question = 'this is my repley';
+    TTS(question);
+    return index++;
+}
+
 function GenerateFieldOptions() {
     field_options.forEach(option_value => {
         const option = document.createElement('option');
@@ -25,25 +88,6 @@ function GenerateSpecialityOptions(field) {
         option.textContent = option_value;
         option.value = option_value;
         speciality_select.appendChild(option);
-    });
-}
-
-function ActivateCamera() {
-    navigator.mediaDevices.getUserMedia({ video: true, audio: false })
-    .then(stream => {
-        const video = document.createElement("video");
-        video.classList.add('video-element');
-        video.srcObject = stream;
-        video.autoplay = true;
-        video.playsInline = true;
-        video_container.appendChild(video);
-        start_container.style.display = 'none';
-        begin = true;
-    })
-    .catch(err => {
-        console.error("Camera access denied:", err);
-        alert("Camera access is required to continue the interview. Please enable it to proceed.");
-        ActivateCamera();
     });
 }
 
@@ -105,27 +149,47 @@ function SlowTyping(samples_letters, location) {
     }
 }
 
-// async function StartRecording() {
-//     const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-//     mediaRecorder = new MediaRecorder(stream);
+async function ActivateMedia() {
+    try {
+        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
 
-//     mediaRecorder.ondataavailable = e => {
-//         audioChunks.push(e.data);
-//     };
+        const video = document.createElement("video");
+        video.classList.add('video-element');
+        video.srcObject = stream;
+        video.autoplay = true;
+        video.playsInline = true;
+        video_container.appendChild(video);
+        start_container.style.display = 'none';
+        begin = true;
 
-//     mediaRecorder.onstop = () => {
-//         const blob = new Blob(audioChunks, { type: 'audio/webm' });
-//         const url = URL.createObjectURL(blob);
-//         const a = document.createElement('a');
-//         a.href = url;
-//         a.download = 'recorded_audio.webm';
-//         a.click();
-//         audioChunks = [];
-//     };
+    } catch (err) {
+        console.error("Camera/Mic access denied:", err);
+        alert("Camera and microphone access are required to continue the interview. Please enable them to proceed.");
+        ActivateMedia();
+    }
+}
 
-//     mediaRecorder.start();
-// }
+function StartRecording() {
+    if (!stream) return;
 
-// function StopRecording() {
-//     if (mediaRecorder) mediaRecorder.stop();
-// }
+    mediaRecorder = new MediaRecorder(stream);
+    audioChunks = [];
+
+    mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+
+    mediaRecorder.onstop = () => {
+        const blob = new Blob(audioChunks, { type: 'audio/webm' });
+        STT(blob);
+        audioChunks = [];
+    };
+
+    mediaRecorder.start();
+    console.log('recording');
+}
+
+function StopRecording() {
+    if (mediaRecorder && mediaRecorder.state !== "inactive") {
+        mediaRecorder.stop();
+        console.log('record');
+    }
+}

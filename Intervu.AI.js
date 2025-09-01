@@ -1,6 +1,6 @@
 const bot_container = document.querySelector('.bot-container');
 const process_block = document.querySelectorAll('.process-block');
-const start_container = document.querySelector('start-container');
+const start_container = document.querySelector('.start-container');
 const start_interview = document.querySelector('.start-interview');
 const field_select = document.querySelector('.field-select');
 const speciality_select = document.querySelector('.speciality-select');
@@ -47,15 +47,19 @@ const speciality_map = {
 };
 
 const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. \
-I'll ask you a few questions to help you practice and improve your interview skills. So how\
-how do you feel?";
+I'll ask you a few questions to help you practice and improve your interview skills. So how \
+do you feel?";
 
 const last_speech = "Thank you so much for completing this interview with Intervu.ai. I really \
 appreciate your time and effort today. Wishing you the best of luck in your future interviews!";
 
+let initial_question = true;
+let begin = false;
+let question_index = 1;
+let question;
 let audioChunks = [];
 let mediaRecorder;
-let begin = false;
+let stream;
 
 GenerateFieldOptions();
 
@@ -67,7 +71,7 @@ start_interview.onclick = function() {
         return;
     }
 
-    ActivateCamera();
+    ActivateMedia();
     let waiting = setInterval(() => {
         if (begin) {
             Timer();
