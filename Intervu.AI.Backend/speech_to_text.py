@@ -1,24 +1,32 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+import speech_recognition as sr
 import tempfile
-import whisper
+from pydub import AudioSegment
 
 app = Flask(__name__)
-model = whisper.load_model("base")
 CORS(app)
 
 @app.route("/stt", methods=["POST"])
 def stt():
     audio_file = request.files["audio"]
 
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp:
-        audio_file.save(tmp.name)
-        tmp_path = tmp.name
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_webm:
+        audio_file.save(tmp_webm.name)
+        webm_path = tmp_webm.name
 
-    result = model.transcribe(tmp_path)
-    text = result.get("text", "")
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_wav:
+        wav_path = tmp_wav.name
+        audio = AudioSegment.from_file(webm_path, format="webm")
+        audio.export(wav_path, format="wav")
+
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(wav_path) as source:
+        audio_data = recognizer.record(source)
+        try: text = recognizer.recognize_google(audio_data)
+        except sr.UnknownValueError: text = ""
 
     return jsonify({"text": text})
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5001, debug=True)

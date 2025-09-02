@@ -1,9 +1,16 @@
-import os
-from dotenv import load_dotenv
-import google.generativeai as genai
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
+from dotenv import load_dotenv
+
+from gtts import gTTS
+import speech_recognition as sr
+import google.generativeai as genai
+
+from pydub import AudioSegment
+import tempfile
 import json
+import os
+import io
 
 load_dotenv()
 genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
@@ -47,6 +54,48 @@ def reply_to_condidate(question, answer, question_index, condidate_field, condid
     
     except Exception as e:
         return {"error": str(e)}
+    
+
+
+@app.route("/tts", methods=["POST"])
+def tts():
+    data = request.get_json()
+    text = data.get("text", "")
+    if not text:
+        return {"error": "No text provided"}, 400
+
+    tts = gTTS(text)
+    buf = io.BytesIO()
+    tts.write_to_fp(buf)
+    buf.seek(0)
+    return send_file(buf, mimetype="audio/mpeg")
+
+
+
+
+@app.route("/stt", methods=["POST"])
+def stt():
+    audio_file = request.files["audio"]
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".webm") as tmp_webm:
+        audio_file.save(tmp_webm.name)
+        webm_path = tmp_webm.name
+
+    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp_wav:
+        wav_path = tmp_wav.name
+        audio = AudioSegment.from_file(webm_path, format="webm")
+        audio.export(wav_path, format="wav")
+
+    recognizer = sr.Recognizer()
+    with sr.AudioFile(wav_path) as source:
+        audio_data = recognizer.record(source)
+        try: text = recognizer.recognize_google(audio_data)
+        except sr.UnknownValueError: text = ""
+
+    return jsonify({"text": text})
+
+
+
 
 @app.route("/reply", methods=["POST"])
 def reply():
@@ -84,4 +133,4 @@ def reply():
         })
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=5002, debug=True)
+    app.run(host="0.0.0.0", port=5000, debug=True)

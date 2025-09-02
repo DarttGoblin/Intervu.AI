@@ -7,12 +7,12 @@ function TTS(text) {
     .then(res => res.blob())
     .then(blob => {
         const url = URL.createObjectURL(blob);
-        const audio = new Audio(url);
-        audio.playbackRate = 1.3;
-        audio.play();
+        const bot_audio = new Audio(url);
+        bot_audio.playbackRate = 1.3;
+        bot_audio.play();
         SlowTyping(text.split(""), text_container_span);
         bot_container.classList.add('glowing'); 
-        audio.addEventListener("ended", () => {
+        bot_audio.addEventListener("ended", () => {
             bot_container.classList.remove('glowing');
             StartRecording();
             FinishButton();
@@ -31,35 +31,37 @@ function STT(audio) {
     })
     .then(res => res.json())
     .then(data => {
-        EvaluateUserResponse(data.text);
+        console.log('user response: ', data.text);
+        ReplyToCondidate(question, data.text, question_index, field_select.value, speciality_select.value);
     })
     .catch(err => console.error("STT error:", err));
 }
 
-function EvaluateUserResponse(question, answer) {
+function ReplyToCondidate(question, answer, index, condidate_field, condidate_speciality) {
     if (initial_question) {
         question = initial_speech;
         initial_question = false;
     }
 
-    fetch("http://127.0.0.1:5000/evaluate", {
+    fetch("http://127.0.0.1:5000/reply", {
         method: "POST",
-        body: JSON.stringify({ question, answer }),
+        body: JSON.stringify({ question, answer, index, condidate_field, condidate_speciality }),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => res.json())
     .then(data => {
+        next_question = data.next_question;
         console.log('score: ', data.score);
         console.log('explanation: ', data.explanation);
-        ReplyToCondidate(question_index);
+        console.log('feedback: ', data.feedback);
+        console.log('next_question: ', data.next_question);
+        
+        question = data.next_question;
+        TTS(data.feedback + " " + data.next_question);
+        return index++;
     })
     .catch(err => console.error("STT error:", err));
-}
 
-function ReplyToCondidate(index) {
-    question = 'this is my repley';
-    TTS(question);
-    return index++;
 }
 
 function GenerateFieldOptions() {
@@ -123,14 +125,17 @@ function Timer() {
 function SlowTyping(text_letters, element) {
     for (var i = 0; i < text_letters.length; i++) {
         (function(index) {
-            setTimeout(() => { element.textContent += text_letters[index]; }, 50 * index);
+            setTimeout(() => { element.textContent += text_letters[index]; }, 60 * index);
         })(i);
     }
 }
 
 async function ActivateMedia() {
     try {
-        stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+        stream = await navigator.mediaDevices.getUserMedia({ 
+            video: true, 
+            audio: { echoCancellation: true, noiseSuppression: true } 
+        });
 
         const video = document.createElement("video");
         video.classList.add('video-element');
