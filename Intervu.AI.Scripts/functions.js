@@ -11,6 +11,7 @@ function TTS(text) {
         const bot_audio = new Audio(url);
         bot_audio.playbackRate = 1.3;
         bot_audio.play();
+        text_container.innerHTML = '';
         SlowTyping(text.split(""));
         bot_container.classList.add('glowing'); 
         bot_audio.addEventListener("ended", () => {
@@ -132,7 +133,7 @@ function SlowTyping(text_letters) {
 
     for (var i = 0; i < text_letters.length; i++) {
         (function(index) {
-            setTimeout(() => { bot_response.textContent += text_letters[index]; }, 60 * index);
+            setTimeout(() => { bot_response.textContent += text_letters[index]; }, 50 * index);
         })(i);
     }
 }
@@ -174,6 +175,13 @@ function StartRecording() {
 
     mediaRecorder.onstop = () => {
         clearTimeout(recordingTimeout);
+        text_container.innerHTML = '';
+        
+        const thinking_span = document.createElement('span');
+        thinking_span.textContent = 'Thinking...';
+        thinking_span.classList.add('thinking-span');
+        text_container.appendChild(thinking_span);
+
         const blob = new Blob(audioChunks, { type: 'audio/webm' });
         STT(blob);
         audioChunks = [];
@@ -200,14 +208,13 @@ function FinishButton() {
     finished.onclick = function() {
         mediaRecorder.stop();
         console.log('recording has finished');
-        text_container.innerHTML = '';
     }
 }
 
 function CheckProgress() {
-    if (question_index == Math.min(6, num_questions - 9)) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
-    else if (question_index == Math.min(13, num_questions - 2)) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
-    else if (question_index == num_questions) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
+    if (question_index == Math.min(6, num_questions - 9)) {process_block[0].style.backgroundColor = 'rgb(33, 104, 192)';}
+    else if (question_index == Math.min(13, num_questions - 2)) {process_block[1].style.backgroundColor = 'rgb(33, 104, 192)';}
+    else if (question_index == num_questions) {process_block[2].style.backgroundColor = 'rgb(33, 104, 192)';}
 }
 
 // function MovableVideo() {

@@ -1,0 +1,11 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "I feel good thank you for your concern how do you feel",
+        "question_index": 1,
+        "score": 75,
+        "explanation": "The response was polite and acknowledged the greeting. However, asking the interviewer how they feel is generally not appropriate in a professional interview setting.",
+        "feedback": "While polite, in an interview, it's best to maintain focus on yourself. Avoid asking the interviewer personal questions.",
+        "next_question": "Let's start with a personal question. Can you tell me a bit about yourself and what sparked your interest in Machine Learning, specifically Computer Vision?"
+    }
+]

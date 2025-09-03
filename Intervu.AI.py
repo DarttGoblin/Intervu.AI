@@ -23,6 +23,34 @@ questions_per_duration = {
     "45": 20   # longer interview → more questions
 }
 
+def save_interview_result(result):
+    base_dir = "Intervu.AI.Media/interviews"
+    os.makedirs(base_dir, exist_ok=True)
+    files = [f for f in os.listdir(base_dir) if f.startswith("interview") and f.endswith(".json")]
+    numbers = [int(f.replace("interview", "").replace(".json", "")) for f in files]
+
+    if numbers:
+        latest_num = max(numbers)
+        file_path = os.path.join(base_dir, f"interview{latest_num}.json")
+    else:
+        latest_num = 1
+        file_path = os.path.join(base_dir, "interview1.json")
+
+    if os.path.exists(file_path):
+        with open(file_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+    else:
+        data = []
+    
+    if str(result.get("question_index")) == "1":
+        latest_num = (max(numbers) + 1) if numbers else 1
+        file_path = os.path.join(base_dir, f"interview{latest_num}.json")
+        data = []
+    data.append(result)
+    with open(file_path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=4, ensure_ascii=False)
+
+
 def reply_to_condidate(question, answer, question_index, condidate_field, condidate_speciality, num_questions):
     prompt = f"""
         You are an AI interview assistant for a virtual interview platform.
@@ -35,9 +63,9 @@ def reply_to_condidate(question, answer, question_index, condidate_field, condid
         Task:
         1. Evaluate the candidate's response to the given question.
         2. Provide constructive feedback:
-        - If the response contains mistakes, politely correct them.
-        - If the response is correct, clarify it to give more depth.
-        - In both cases, generate short and concise content
+        - If the response contains mistakes, politely correct them in short and concise way.
+        - If the response is correct, clarify it to give more depth in short and concise way.
+        - In both cases, generate short and concise content, max 25 words.
         3. Assign a score out of 100 with a clear explanation of the evaluation.
         4. Generate the next interview question based on the current question index {question_index} and the interview structure above.
 
@@ -126,6 +154,16 @@ def reply():
         print('explanation:', explanation)
         print('feedback:', feedback)
         print('next_question:', next_question)
+
+        save_interview_result({
+            "question": question,
+            "answer": answer,
+            "question_index": index,
+            "score": score,
+            "explanation": explanation,
+            "feedback": feedback,
+            "next_question": next_question
+        })
 
         return jsonify({
             "score": score,

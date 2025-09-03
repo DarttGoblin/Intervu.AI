@@ -1,0 +1,11 @@
+[
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 1,
+        "score": 50,
+        "explanation": "No response was provided for evaluation as this is the start of the interview process.",
+        "feedback": "Welcome! Let's begin. Your first question is ready.",
+        "next_question": "Tell me about your background and what specifically drew you to specialize in Computer Vision within Machine Learning."
+    }
+]

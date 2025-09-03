@@ -1,0 +1,11 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "I feel good thank you for asking me",
+        "question_index": 1,
+        "score": 100,
+        "explanation": "The candidate's response was polite, concise, and perfectly appropriate for an opening pleasantry, indicating a positive and ready demeanor.",
+        "feedback": "A polite and concise opening response effectively sets a positive tone for the interview, demonstrating professional courtesy.",
+        "next_question": "Can you please tell me a little bit about yourself and your professional background?"
+    }
+]

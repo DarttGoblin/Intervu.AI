@@ -181,6 +181,16 @@ i {
     border-radius: var(--main-border-radius);
 }
 
+.thinking-span {
+    font-size: 20px;    
+    animation: thinking 0.8s ease-in-out infinite alternate;
+}
+
+@keyframes thinking {
+    0% {opacity: 0.2;}
+    100% {opacity: 1;}
+}
+
 .start-container {
     display: flex;
     flex-direction: column;
