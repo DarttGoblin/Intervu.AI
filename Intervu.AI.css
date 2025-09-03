@@ -81,7 +81,7 @@ i {
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 150px;
+    gap: 100px;
     margin-top: 200px;
 }
 
@@ -152,7 +152,7 @@ i {
 }
 
 .empty {
-    width: 400px;
+    width: 500px;
 }
 
 .text-container {
@@ -161,8 +161,13 @@ i {
     justify-content: center;
     align-self: center;
     gap: 20px;
-    width: 400px;
+    width: 500px;
     font-size: 22px;
+}
+
+.text-container-span {
+    font-size: 20px;
+    width: 100%;
 }
 
 .finished {
@@ -319,5 +324,9 @@ option {
 
     .timer-span {
         font-size: 15px;
+    }
+
+    .text-container-span {
+        font-size: 25px;
     }
 }

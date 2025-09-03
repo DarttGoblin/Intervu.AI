@@ -6,16 +6,16 @@ function TTS(text) {
     })
     .then(res => res.blob())
     .then(blob => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {mediaRecorder.stop();}
         const url = URL.createObjectURL(blob);
         const bot_audio = new Audio(url);
         bot_audio.playbackRate = 1.3;
         bot_audio.play();
-        SlowTyping(text.split(""), text_container_span);
+        SlowTyping(text.split(""));
         bot_container.classList.add('glowing'); 
         bot_audio.addEventListener("ended", () => {
             bot_container.classList.remove('glowing');
             StartRecording();
-            FinishButton();
         });
     })
     .catch(err => console.error(err));
@@ -32,12 +32,12 @@ function STT(audio) {
     .then(res => res.json())
     .then(data => {
         console.log('user response: ', data.text);
-        ReplyToCondidate(question, data.text, question_index, field_select.value, speciality_select.value);
+        ReplyToCondidate(question, data.text, question_index, field_select.value, speciality_select.value, num_questions);
     })
     .catch(err => console.error("STT error:", err));
 }
 
-function ReplyToCondidate(question, answer, index, condidate_field, condidate_speciality) {
+function ReplyToCondidate(question, answer, index, condidate_field, condidate_speciality, num_questions) {
     if (initial_question) {
         question = initial_speech;
         initial_question = false;
@@ -45,7 +45,7 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
 
     fetch("http://127.0.0.1:5000/reply", {
         method: "POST",
-        body: JSON.stringify({ question, answer, index, condidate_field, condidate_speciality }),
+        body: JSON.stringify({ question, answer, index, condidate_field, condidate_speciality, num_questions }),
         headers: { "Content-Type": "application/json" }
     })
     .then(res => res.json())
@@ -58,7 +58,10 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
         
         question = data.next_question;
         TTS(data.feedback + " " + data.next_question);
-        return index++;
+
+        question = question + 1;
+        CheckProgress();
+        return question_index; 
     })
     .catch(err => console.error("STT error:", err));
 
@@ -122,10 +125,14 @@ function Timer() {
     }, 1000);
 }
 
-function SlowTyping(text_letters, element) {
+function SlowTyping(text_letters) {
+    const bot_response = document.createElement('span');
+    bot_response.classList.add('text-container-span');
+    text_container.appendChild(bot_response);
+
     for (var i = 0; i < text_letters.length; i++) {
         (function(index) {
-            setTimeout(() => { element.textContent += text_letters[index]; }, 60 * index);
+            setTimeout(() => { bot_response.textContent += text_letters[index]; }, 60 * index);
         })(i);
     }
 }
@@ -134,7 +141,11 @@ async function ActivateMedia() {
     try {
         stream = await navigator.mediaDevices.getUserMedia({ 
             video: true, 
-            audio: { echoCancellation: true, noiseSuppression: true } 
+            audio: { 
+                echoCancellation: true, 
+                noiseSuppression: true, 
+                autoGainControl: true 
+            }
         });
 
         const video = document.createElement("video");
@@ -162,6 +173,7 @@ function StartRecording() {
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
     mediaRecorder.onstop = () => {
+        clearTimeout(recordingTimeout);
         const blob = new Blob(audioChunks, { type: 'audio/webm' });
         STT(blob);
         audioChunks = [];
@@ -169,6 +181,14 @@ function StartRecording() {
 
     mediaRecorder.start();
     console.log('recording');
+    FinishButton();
+
+    recordingTimeout = setTimeout(() => {
+        if (mediaRecorder && mediaRecorder.state === "recording") {
+            mediaRecorder.stop();
+            console.log("Recording stopped automatically after 1 minute.");
+        }
+    }, user_time_allowed * 1000);
 }
 
 function FinishButton() {
@@ -179,9 +199,15 @@ function FinishButton() {
 
     finished.onclick = function() {
         mediaRecorder.stop();
-        console.log('record has finished');
+        console.log('recording has finished');
         text_container.innerHTML = '';
     }
+}
+
+function CheckProgress() {
+    if (question_index == Math.min(6, num_questions - 9)) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
+    else if (question_index == Math.min(13, num_questions - 2)) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
+    else if (question_index == num_questions) {process_block.style.backgroundColor = 'rgb(33, 104, 192)';}
 }
 
 // function MovableVideo() {

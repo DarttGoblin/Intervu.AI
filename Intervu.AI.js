@@ -1,7 +1,6 @@
 const bot_container = document.querySelector('.bot-container');
 const process_block = document.querySelectorAll('.process-block');
 const start_container = document.querySelector('.start-container');
-const text_container_span = document.querySelector('.text-container-span');
 const start_interview = document.querySelector('.start-interview');
 const field_select = document.querySelector('.field-select');
 const speciality_select = document.querySelector('.speciality-select');
@@ -47,6 +46,12 @@ const speciality_map = {
     ]
 };
 
+const questionsPerDuration = {
+    "15": 10,  // shorter interview → fewer questions
+    "30": 15,  // medium interview → full 15 questions
+    "45": 20   // longer interview → more questions
+};
+
 const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. \
 I'll ask you a few questions to help you practice and improve your interview skills. So how \
 do you feel?";
@@ -54,23 +59,31 @@ do you feel?";
 const last_speech = "Thank you so much for completing this interview with Intervu.ai. I really \
 appreciate your time and effort today. Wishing you the best of luck in your future interviews!";
 
+let user_time_allowed = 60; // in seconds
 let initial_question = true;
 let begin = false;
+let duration;
+let num_questions;
 let question_index = 1;
 let question;
 let audioChunks = [];
 let mediaRecorder;
+let recordingTimeout;
 let stream;
 
 GenerateFieldOptions();
 
 start_interview.onclick = function() {
-    if (field_select.value == 'Choose a field' && 
-        speciality_select.value == 'Choose a speciality' &&
+    if (field_select.value == 'Choose a field' ||
+        speciality_select.value == 'Choose a speciality' ||
         duration_select.value == 'Choose a duration') {
         alert('Field and a speciality and duration are required');
         return;
     }
+
+    duration = duration_select.value;
+    num_questions = parseInt(questionsPerDuration[duration]) || 15;
+    console.log(num_questions, typeof(num_questions));
 
     ActivateMedia();
     let waiting = setInterval(() => {

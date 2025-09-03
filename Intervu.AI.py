@@ -17,20 +17,27 @@ genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
 app = Flask(__name__)
 CORS(app)
 
-def reply_to_condidate(question, answer, question_index, condidate_field, condidate_speciality):
+questions_per_duration = {
+    "15": 10,  # shorter interview → fewer questions
+    "30": 15,  # medium interview → full 15 questions
+    "45": 20   # longer interview → more questions
+}
+
+def reply_to_condidate(question, answer, question_index, condidate_field, condidate_speciality, num_questions):
     prompt = f"""
         You are an AI interview assistant for a virtual interview platform.
 
         The interview is structured as follows:
-        - Questions 1 to 5: Personal/behavioral questions
-        - Questions 6 to 12: Technical questions specific to the {condidate_speciality} speciality in {condidate_field} field 
-        - Questions 13 to 15: Situational/hypothetical questions related to the {condidate_speciality} speciality in {condidate_field} field
+        - Questions 1 to {min(5, num_questions)}: Personal/behavioral questions
+        - Questions {min(6, num_questions-9)} to {min(12, num_questions-3)}: Technical questions specific to the {condidate_speciality} speciality in {condidate_field} field 
+        - Questions {min(13, num_questions-2)} to {num_questions}: Situational/hypothetical questions related to the {condidate_speciality} speciality in {condidate_field} field
 
         Task:
         1. Evaluate the candidate's response to the given question.
         2. Provide constructive feedback:
         - If the response contains mistakes, politely correct them.
-        - If the response is correct, clarify or expand on it to give more depth.
+        - If the response is correct, clarify it to give more depth.
+        - In both cases, generate short and concise content
         3. Assign a score out of 100 with a clear explanation of the evaluation.
         4. Generate the next interview question based on the current question index {question_index} and the interview structure above.
 
@@ -105,7 +112,8 @@ def reply():
     index = data.get("index", "")
     condidate_field = data.get("condidate_field", "")
     condidate_speciality = data.get("condidate_speciality", "")
-    result = reply_to_condidate(question, answer, index, condidate_field, condidate_speciality)
+    num_questions = data.get("num_questions", "")
+    result = reply_to_condidate(question, answer, index, condidate_field, condidate_speciality, num_questions)
 
     try:
         result_json = json.loads(result)
