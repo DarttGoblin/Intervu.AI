@@ -3,6 +3,7 @@ const process_block = document.querySelectorAll('.process-block');
 const bright_mode = document.querySelector('.bright-mode');
 const start_container = document.querySelector('.start-container');
 const start_interview = document.querySelector('.start-interview');
+const watch_demo = document.querySelector('.watch-demo');
 const field_select = document.querySelector('.field-select');
 const speciality_select = document.querySelector('.speciality-select');
 const duration_select = document.querySelector('.duration-select');
@@ -96,4 +97,9 @@ start_interview.onclick = function() {
             clearInterval(waiting);
         }
     }, 500);
+}
+
+watch_demo.onclick = function() {
+    alert('Demo not available yet! Will be soon!');
+    // window.open('', '_blank');
 }

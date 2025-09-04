@@ -224,7 +224,7 @@ i {
     margin-top: 70px;
 }
 
-.start-interview {
+.start-interview, .watch-demo {
     background-color: var(--main-color);
     color: white;
     border-radius: var(--main-border-radius);
@@ -236,8 +236,12 @@ i {
     transition: padding var(--main-transition);
 }
 
-.start-interview:hover {
+.start-interview:hover, .watch-demo:hover {
     padding: 10px 50px;
+}
+
+.watch-demo {
+    background-color: black;
 }
 
 .selects-container {
