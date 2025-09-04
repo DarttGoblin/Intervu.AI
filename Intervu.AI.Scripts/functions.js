@@ -6,17 +6,18 @@ function TTS(text) {
     })
     .then(res => res.blob())
     .then(blob => {
-        if (mediaRecorder && mediaRecorder.state === "recording") {mediaRecorder.stop();}
         const url = URL.createObjectURL(blob);
         const bot_audio = new Audio(url);
         bot_audio.playbackRate = 1.3;
+        bot_audio.volume = 1;
         bot_audio.play();
         text_container.innerHTML = '';
         SlowTyping(text.split(""));
         bot_container.classList.add('glowing'); 
         bot_audio.addEventListener("ended", () => {
             bot_container.classList.remove('glowing');
-            if (text == last_speech) {return;}
+            if (text == LastSpeech()) {return;}
+            if (interviewEnded) {TTS(LastSpeech());}
             StartRecording();
         });
     })
@@ -61,7 +62,8 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
     .then(res => res.json())
     .then(data => {
         next_question = data.next_question;
-        
+        scores.push(Number(data.score));
+
         question = data.next_question;
         TTS(data.feedback + " " + data.next_question);
 
@@ -123,16 +125,21 @@ function Timer() {
 
         if (totalSeconds < 0) {
             clearInterval(interval);
-            document.querySelectorAll("audio").forEach(a => a.pause());
-            TTS(last_speech);
+            EndInterview();
         }
 
         if (mins < 5) {
-            if (red) {time_span.style.color = 'red';}
-            else {time_span.style.color = 'black';}
+            if (red) {
+                time_span.classList.remove('black');
+                time_span.classList.add('red');
+            }
+            else {
+                time_span.classList.remove('red');
+                time_span.classList.add('black');
+            }
             red = !red;
         }
-    }, 1000);
+    }, 10);
 }
 
 function SlowTyping(text_letters) {
@@ -185,6 +192,8 @@ function StartRecording() {
     mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
 
     mediaRecorder.onstop = () => {
+        if (interviewEnded) {return;}
+
         clearTimeout(recordingTimeout);
         text_container.innerHTML = '';
         BotState('Thinking...');
@@ -228,7 +237,8 @@ function CheckProgress() {
     else if (question_index === technicalEnd) {process_block[1].classList.add('achieved-process');} 
     else if (question_index === situationalEnd) {
         process_block[2].classList.add('achieved-process');
-        TTS(last_speech);
+        EndInterview();
+        TTS(LastSpeech());
     }
 }
 
@@ -245,24 +255,38 @@ function BrightnessMode() {
 
     if (mode === null || mode === 'dark') {
         document.body.classList.add('dark-mode');
-        bright_mode.src = 'Intervu.AI.Media/dark.png';
+        bright_mode.src = 'Intervu.AI.Media/bright.png';
         localStorage.setItem('mode', 'dark');
     } else {
         document.body.classList.remove('dark-mode');
-        bright_mode.src = 'Intervu.AI.Media/bright.png';
+        bright_mode.src = 'Intervu.AI.Media/dark.png';
     }
 
     bright_mode.onclick = function () {
         if (document.body.classList.contains('dark-mode')) {
             document.body.classList.remove('dark-mode');
-            bright_mode.src = 'Intervu.AI.Media/bright.png';
+            bright_mode.src = 'Intervu.AI.Media/dark.png';
             localStorage.setItem('mode', 'light');
         } else {
             document.body.classList.add('dark-mode');
-            bright_mode.src = 'Intervu.AI.Media/dark.png';
+            bright_mode.src = 'Intervu.AI.Media/bright.png';
             localStorage.setItem('mode', 'dark');
         }
     };
+}
+
+function EndInterview() {
+    interviewEnded = true;
+    begin = false;
+    if (mediaRecorder && mediaRecorder.state === "recording") {mediaRecorder.stop();}
+    if (stream) {stream.getTracks().forEach(track => track.stop());}
+    video_container.innerHTML = '';
+    CalculateScore();
+}
+
+function CalculateScore() {
+    let scores_sum = scores.reduce((a, b) => a + b, 0);
+    final_score = (scores_sum / num_questions).toFixed(0); 
 }
 
 function MovableVideo() {
@@ -285,4 +309,10 @@ function MovableVideo() {
     document.addEventListener("mouseup", () => {
         isDragging = false;
     });
+}
+
+function LastSpeech() {
+    return `The interview has ended, your score is ${final_score}/100, thank you so \
+        much for completing this interview with Intervu.ai. I really appreciate your time and effort \
+        today. Wishing you the best of luck in your future interviews!`;
 }

@@ -57,10 +57,8 @@ const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview
 I'll ask you a few questions to help you practice and improve your interview skills. So how \
 do you feel?";
 
-const last_speech = "Thank you so much for completing this interview with Intervu.ai. I really \
-appreciate your time and effort today. Wishing you the best of luck in your future interviews!";
-
-let user_time_allowed = 60;
+let user_time_allowed = 40;
+let interviewEnded = false;
 let initial_question = true;
 let begin = false;
 let mode;
@@ -68,10 +66,12 @@ let duration;
 let num_questions;
 let question_index = 1;
 let question;
-let audioChunks = [];
 let mediaRecorder;
 let recordingTimeout;
 let stream;
+let audioChunks = [];
+let scores = [];
+let final_score;
 
 GenerateFieldOptions();
 BrightnessMode();
@@ -85,7 +85,7 @@ start_interview.onclick = function() {
     }
 
     duration = duration_select.value;
-    num_questions = parseInt(questionsPerDuration[duration].total) || 15;
+    num_questions = parseInt(questionsPerDuration[duration].total) || 10;
 
     ActivateMedia();
     let waiting = setInterval(() => {

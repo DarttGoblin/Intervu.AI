@@ -24,7 +24,7 @@ questions_per_duration = {
 }
 
 def save_interview_result(result):
-    base_dir = "interviews"
+    base_dir = os.path.join(os.path.dirname(__file__), "Intervu.AI.Media/interviews")
     os.makedirs(base_dir, exist_ok=True)
     files = [f for f in os.listdir(base_dir) if f.startswith("interview") and f.endswith(".json")]
     numbers = [int(f.replace("interview", "").replace(".json", "")) for f in files]
