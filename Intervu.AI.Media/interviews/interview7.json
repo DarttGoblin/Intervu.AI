@@ -1,0 +1,29 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "",
+        "question_index": 1,
+        "score": 10,
+        "explanation": "The candidate did not provide a response to the introductory question, hence a very low score.",
+        "feedback": "It seems you didn't provide a response. Please try to answer the questions to the best of your ability.",
+        "next_question": "Tell me about yourself and what motivated you to pursue a career in Machine Learning, specifically Computer Vision."
+    },
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 2,
+        "score": 0,
+        "explanation": "The candidate provided an empty response, indicating they either had no answer or chose to skip the question.",
+        "feedback": "Since the response was empty, it suggests you might not have an answer or chose to skip the question. Let's move on.",
+        "next_question": "Can you share an experience where you had to adapt to a significant change or unexpected challenge in a project?"
+    },
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 3,
+        "score": 0,
+        "explanation": "No response was provided, preventing evaluation of the candidate's understanding or experience in personal/behavioral aspects.",
+        "feedback": "No response was provided for the question, which means no content was available for evaluation.",
+        "next_question": "Explain the concept of Convolutional Neural Networks (CNNs) and their role in computer vision tasks. Provide an example of a common CNN architecture."
+    }
+]

@@ -1,5 +1,6 @@
 const bot_container = document.querySelector('.bot-container');
 const process_block = document.querySelectorAll('.process-block');
+const bright_mode = document.querySelector('.bright-mode');
 const start_container = document.querySelector('.start-container');
 const start_interview = document.querySelector('.start-interview');
 const field_select = document.querySelector('.field-select');
@@ -47,9 +48,9 @@ const speciality_map = {
 };
 
 const questionsPerDuration = {
-    "15": 10,  // shorter interview → fewer questions
-    "30": 15,  // medium interview → full 15 questions
-    "45": 20   // longer interview → more questions
+    "15": { total: 10, personal: 2, technical: 4, situational: 4 },
+    "30": { total: 15, personal: 3, technical: 6, situational: 6 },
+    "45": { total: 20, personal: 4, technical: 8, situational: 8 }
 };
 
 const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. \
@@ -59,9 +60,10 @@ do you feel?";
 const last_speech = "Thank you so much for completing this interview with Intervu.ai. I really \
 appreciate your time and effort today. Wishing you the best of luck in your future interviews!";
 
-let user_time_allowed = 60; // in seconds
+let user_time_allowed = 60;
 let initial_question = true;
 let begin = false;
+let mode;
 let duration;
 let num_questions;
 let question_index = 1;
@@ -72,6 +74,7 @@ let recordingTimeout;
 let stream;
 
 GenerateFieldOptions();
+BrightnessMode();
 
 start_interview.onclick = function() {
     if (field_select.value == 'Choose a field' ||
@@ -82,14 +85,13 @@ start_interview.onclick = function() {
     }
 
     duration = duration_select.value;
-    num_questions = parseInt(questionsPerDuration[duration]) || 15;
-    console.log(num_questions, typeof(num_questions));
+    num_questions = parseInt(questionsPerDuration[duration].total) || 15;
 
     ActivateMedia();
     let waiting = setInterval(() => {
         if (begin) {
             Timer();
-            // MovableVideo();
+            BotState('Get Ready! 😊');
             TTS(initial_speech);
             clearInterval(waiting);
         }

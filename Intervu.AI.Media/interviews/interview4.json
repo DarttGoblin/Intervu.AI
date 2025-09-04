@@ -1,11 +1,11 @@
 [
     {
-        "question": "",
-        "answer": "yes of course I am Ascent in master artificial intelligence my first year I've been passionate about",
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "if you're fine thank you so much",
         "question_index": 1,
-        "score": 30,
-        "explanation": "The response is incomplete, contains grammatical errors, and lacks depth. It's hard to assess your background effectively from this answer.",
-        "feedback": "Ensure to use complete sentences and elaborate more clearly on your academic background and specific interests in AI.",
-        "next_question": "Could you describe your motivations for pursuing a Master's in Artificial Intelligence and what aspects you find most engaging?"
+        "score": 40,
+        "explanation": "The response was unclear and did not directly answer the question about your feelings. It lacked professionalism for an interview start.",
+        "feedback": "A more direct and positive answer, like 'I'm feeling great, thank you!' would be more appropriate.",
+        "next_question": "Could you start by telling me a bit about yourself and what specifically excites you about the field of Computer Vision?"
     }
 ]

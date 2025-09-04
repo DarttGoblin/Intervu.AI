@@ -16,10 +16,15 @@ function TTS(text) {
         bot_container.classList.add('glowing'); 
         bot_audio.addEventListener("ended", () => {
             bot_container.classList.remove('glowing');
+            if (text == last_speech) {return;}
             StartRecording();
         });
     })
-    .catch(err => console.error(err));
+    .catch(err => {
+            console.error(err);
+            SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+        }
+    );
 }
 
 function STT(audio) {
@@ -35,7 +40,11 @@ function STT(audio) {
         console.log('user response: ', data.text);
         ReplyToCondidate(question, data.text, question_index, field_select.value, speciality_select.value, num_questions);
     })
-    .catch(err => console.error("STT error:", err));
+    .catch(err => 
+        {
+            console.error("STT error:", err)
+            SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+        });
 }
 
 function ReplyToCondidate(question, answer, index, condidate_field, condidate_speciality, num_questions) {
@@ -52,19 +61,18 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
     .then(res => res.json())
     .then(data => {
         next_question = data.next_question;
-        console.log('score: ', data.score);
-        console.log('explanation: ', data.explanation);
-        console.log('feedback: ', data.feedback);
-        console.log('next_question: ', data.next_question);
         
         question = data.next_question;
         TTS(data.feedback + " " + data.next_question);
 
-        question = question + 1;
         CheckProgress();
+        question_index = question_index + 1;
         return question_index; 
     })
-    .catch(err => console.error("STT error:", err));
+    .catch(err => {
+        console.error("STT error:", err)
+        SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+    });
 
 }
 
@@ -115,6 +123,7 @@ function Timer() {
 
         if (totalSeconds < 0) {
             clearInterval(interval);
+            document.querySelectorAll("audio").forEach(a => a.pause());
             TTS(last_speech);
         }
 
@@ -129,6 +138,7 @@ function Timer() {
 function SlowTyping(text_letters) {
     const bot_response = document.createElement('span');
     bot_response.classList.add('text-container-span');
+    text_container.innerHTML = '';
     text_container.appendChild(bot_response);
 
     for (var i = 0; i < text_letters.length; i++) {
@@ -153,6 +163,7 @@ async function ActivateMedia() {
         video.classList.add('video-element');
         video.srcObject = stream;
         video.autoplay = true;
+        video.muted = true;
         video.playsInline = true;
         video_container.appendChild(video);
         start_container.style.display = 'none';
@@ -176,11 +187,7 @@ function StartRecording() {
     mediaRecorder.onstop = () => {
         clearTimeout(recordingTimeout);
         text_container.innerHTML = '';
-        
-        const thinking_span = document.createElement('span');
-        thinking_span.textContent = 'Thinking...';
-        thinking_span.classList.add('thinking-span');
-        text_container.appendChild(thinking_span);
+        BotState('Thinking...');
 
         const blob = new Blob(audioChunks, { type: 'audio/webm' });
         STT(blob);
@@ -188,7 +195,7 @@ function StartRecording() {
     };
 
     mediaRecorder.start();
-    console.log('recording');
+    console.log('recording has started');
     FinishButton();
 
     recordingTimeout = setTimeout(() => {
@@ -212,29 +219,70 @@ function FinishButton() {
 }
 
 function CheckProgress() {
-    if (question_index == Math.min(6, num_questions - 9)) {process_block[0].style.backgroundColor = 'rgb(33, 104, 192)';}
-    else if (question_index == Math.min(13, num_questions - 2)) {process_block[1].style.backgroundColor = 'rgb(33, 104, 192)';}
-    else if (question_index == num_questions) {process_block[2].style.backgroundColor = 'rgb(33, 104, 192)';}
+    const split = questionsPerDuration[duration];
+    const personalEnd = split.personal;
+    const technicalEnd = personalEnd + split.technical;
+    const situationalEnd = technicalEnd + split.situational;
+
+    if (question_index === personalEnd) {process_block[0].classList.add('achieved-process');} 
+    else if (question_index === technicalEnd) {process_block[1].classList.add('achieved-process');} 
+    else if (question_index === situationalEnd) {
+        process_block[2].classList.add('achieved-process');
+        TTS(last_speech);
+    }
 }
 
-// function MovableVideo() {
-//     let offsetX, offsetY, isDragging = false;
+function BotState(state) {
+    const bot_state_span = document.createElement('span');
+    bot_state_span.textContent = state;
+    bot_state_span.classList.add('bot-state-span');
+    text_container.innerHTML = '';
+    text_container.appendChild(bot_state_span);
+}
 
-//     video_container.addEventListener("mousedown", e => {
-//         isDragging = true;
-//         offsetX = e.clientX - video_container.offsetLeft;
-//         offsetY = e.clientY - video_container.offsetTop;
-//     });
+function BrightnessMode() {
+    let mode = localStorage.getItem('mode');
 
-//     document.addEventListener("mousemove", e => {
-//     if (isDragging) {
-//         video_container.style.position = "absolute";
-//         video_container.style.left = (e.clientX - offsetX) + "px";
-//         video_container.style.top = (e.clientY - offsetY) + "px";
-//     }
-//     });
+    if (mode === null || mode === 'dark') {
+        document.body.classList.add('dark-mode');
+        bright_mode.src = 'Intervu.AI.Media/dark.png';
+        localStorage.setItem('mode', 'dark');
+    } else {
+        document.body.classList.remove('dark-mode');
+        bright_mode.src = 'Intervu.AI.Media/bright.png';
+    }
 
-//     document.addEventListener("mouseup", () => {
-//         isDragging = false;
-//     });
-// }
+    bright_mode.onclick = function () {
+        if (document.body.classList.contains('dark-mode')) {
+            document.body.classList.remove('dark-mode');
+            bright_mode.src = 'Intervu.AI.Media/bright.png';
+            localStorage.setItem('mode', 'light');
+        } else {
+            document.body.classList.add('dark-mode');
+            bright_mode.src = 'Intervu.AI.Media/dark.png';
+            localStorage.setItem('mode', 'dark');
+        }
+    };
+}
+
+function MovableVideo() {
+    let offsetX, offsetY, isDragging = false;
+
+    video_container.addEventListener("mousedown", e => {
+        isDragging = true;
+        offsetX = e.clientX - video_container.offsetLeft;
+        offsetY = e.clientY - video_container.offsetTop;
+    });
+
+    document.addEventListener("mousemove", e => {
+    if (isDragging) {
+        video_container.style.position = "absolute";
+        video_container.style.left = (e.clientX - offsetX) + "px";
+        video_container.style.top = (e.clientY - offsetY) + "px";
+    }
+    });
+
+    document.addEventListener("mouseup", () => {
+        isDragging = false;
+    });
+}

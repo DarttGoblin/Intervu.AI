@@ -24,6 +24,7 @@ nav {
     height: fit-content;
     width: calc(100% - 60px);
     padding: 30px;
+    user-select: none;
 }
 
 .nav-span {
@@ -56,8 +57,22 @@ nav {
     border: 2px solid var(--main-color);
 }
 
+.achieved-process {
+    background-color: var(--main-color);
+}
+
 .timer-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
     width: 200px;
+}
+
+.bright-mode {
+    height: 35px;
+    width: 35px;
+    cursor: pointer;
 }
 
 .timer-span {
@@ -146,9 +161,10 @@ i {
 }
 
 .inner-circle {
+    box-shadow: 0px 10px 30px 1px black;
     height: 100px;
     width: 100px;
-    box-shadow: 0px 10px 30px 1px black;
+    user-select: none;
 }
 
 .empty {
@@ -181,7 +197,7 @@ i {
     border-radius: var(--main-border-radius);
 }
 
-.thinking-span {
+.bot-state-span {
     font-size: 20px;    
     animation: thinking 0.8s ease-in-out infinite alternate;
 }
@@ -251,7 +267,6 @@ option {
 .video-element {
     width: 60%;
 }
-
 
 @media only screen and (max-width: 1300px) {
     .bot-section {

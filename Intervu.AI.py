@@ -18,13 +18,13 @@ app = Flask(__name__)
 CORS(app)
 
 questions_per_duration = {
-    "15": 10,  # shorter interview → fewer questions
-    "30": 15,  # medium interview → full 15 questions
-    "45": 20   # longer interview → more questions
+    "10": {"total": 10, "personal": 2, "technical": 4, "situational": 4},
+    "15": {"total": 15, "personal": 3, "technical": 6, "situational": 6},
+    "20": {"total": 20, "personal": 4, "technical": 8, "situational": 8}
 }
 
 def save_interview_result(result):
-    base_dir = "Intervu.AI.Media/interviews"
+    base_dir = "interviews"
     os.makedirs(base_dir, exist_ok=True)
     files = [f for f in os.listdir(base_dir) if f.startswith("interview") and f.endswith(".json")]
     numbers = [int(f.replace("interview", "").replace(".json", "")) for f in files]
@@ -52,13 +52,24 @@ def save_interview_result(result):
 
 
 def reply_to_condidate(question, answer, question_index, condidate_field, condidate_speciality, num_questions):
+    # ensure we’re working with string keys
+    split = questions_per_duration[str(num_questions)]
+
+    p = split["personal"]
+    t = split["technical"]
+    s = split["situational"]
+
+    personal_start, personal_end = 1, p
+    technical_start, technical_end = personal_end + 1, personal_end + t
+    situational_start, situational_end = technical_end + 1, technical_end + s
+
     prompt = f"""
         You are an AI interview assistant for a virtual interview platform.
 
         The interview is structured as follows:
-        - Questions 1 to {min(5, num_questions)}: Personal/behavioral questions
-        - Questions {min(6, num_questions-9)} to {min(12, num_questions-3)}: Technical questions specific to the {condidate_speciality} speciality in {condidate_field} field 
-        - Questions {min(13, num_questions-2)} to {num_questions}: Situational/hypothetical questions related to the {condidate_speciality} speciality in {condidate_field} field
+        - Questions {personal_start} to {personal_end}: Personal/behavioral questions
+        - Questions {technical_start} to {technical_end}: Technical questions specific to the {condidate_speciality} speciality in {condidate_field} field
+        - Questions {situational_start} to {situational_end}: Situational/hypothetical questions related to the {condidate_speciality} speciality in {condidate_field} field
 
         Task:
         1. Evaluate the candidate's response to the given question.
@@ -66,8 +77,10 @@ def reply_to_condidate(question, answer, question_index, condidate_field, condid
         - If the response contains mistakes, politely correct them in short and concise way.
         - If the response is correct, clarify it to give more depth in short and concise way.
         - In both cases, generate short and concise content, max 25 words.
+        - If user response was empty, then probably they have no answer or skipped the question, handle the situation. 
         3. Assign a score out of 100 with a clear explanation of the evaluation.
-        4. Generate the next interview question based on the current question index {question_index} and the interview structure above.
+        4. Generate the next interview question based on the current question index: {question_index}, 
+           based on the interview structure above.
 
         Input:
         Question: "{question}"
@@ -149,11 +162,6 @@ def reply():
         explanation = result_json.get("explanation")
         feedback = result_json.get("feedback")
         next_question = result_json.get("next_question")
-
-        print('score:', score)
-        print('explanation:', explanation)
-        print('feedback:', feedback)
-        print('next_question:', next_question)
 
         save_interview_result({
             "question": question,

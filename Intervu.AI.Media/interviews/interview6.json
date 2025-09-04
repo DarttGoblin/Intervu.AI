@@ -1,0 +1,20 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "if you're fine there's so much",
+        "question_index": 1,
+        "score": 10,
+        "explanation": "The response did not directly address the question about how you are feeling, indicating a misunderstanding or a non-sequitur.",
+        "feedback": "Please answer how you are feeling. It's important to respond directly to the question asked to ensure clear communication.",
+        "next_question": "Great, let's start. Can you tell me a bit about yourself and what specifically interests you in the field of Machine Learning, particularly Computer Vision?"
+    },
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 2,
+        "score": 0,
+        "explanation": "No answer was provided for this question.",
+        "feedback": "It seems you've skipped this question. Please provide an answer for the next one.",
+        "next_question": "Can you explain the difference between image classification, object detection, and image segmentation in computer vision?"
+    }
+]
