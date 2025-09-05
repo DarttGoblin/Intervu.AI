@@ -9,6 +9,7 @@
 }
 
 body {
+    user-select: none;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -24,7 +25,6 @@ nav {
     height: fit-content;
     width: calc(100% - 60px);
     padding: 30px;
-    user-select: none;
 }
 
 .nav-span {

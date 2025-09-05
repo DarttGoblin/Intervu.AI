@@ -77,6 +77,8 @@ let final_score;
 GenerateFieldOptions();
 BrightnessMode();
 
+
+document.body.style.userSelect = 'none';
 start_interview.onclick = function() {
     if (field_select.value == 'Choose a field' ||
         speciality_select.value == 'Choose a speciality' ||
