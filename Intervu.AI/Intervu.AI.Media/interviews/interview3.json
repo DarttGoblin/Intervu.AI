@@ -1,0 +1,11 @@
+[
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 1,
+        "score": 0,
+        "explanation": "No question was provided, and therefore no response was evaluated. This indicates the start of the interview process.",
+        "feedback": "The interview is commencing. Please find the first question below.",
+        "next_question": "Tell me about a time you had to learn a new technology or skill quickly. How did you approach it?"
+    }
+]

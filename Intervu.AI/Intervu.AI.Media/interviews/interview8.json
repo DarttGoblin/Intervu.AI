@@ -1,0 +1,20 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "",
+        "question_index": 1,
+        "score": 40,
+        "explanation": "The candidate did not provide a response to the introductory question.",
+        "feedback": "No response was provided for this introductory question. Feel free to share your thoughts next time.",
+        "next_question": "Great, let's move on. Could you tell me about your motivation for pursuing a career in Machine Learning, especially in Computer Vision?"
+    },
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 2,
+        "score": 0,
+        "explanation": "No response was provided to the question. It's essential to provide an answer to be evaluated.",
+        "feedback": "Providing no response indicates a lack of answer or a skipped question. Always attempt to provide an answer.",
+        "next_question": "Can you describe a challenging situation you faced in a previous role and how you successfully navigated it?"
+    }
+]
