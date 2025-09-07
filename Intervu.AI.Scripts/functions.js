@@ -1,5 +1,5 @@
 function TTS(text) {
-    fetch("http://127.0.0.1:5000/tts", {
+    fetch(`${BACKEND_URL}/tts`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ text })
@@ -33,7 +33,7 @@ function STT(audio) {
     const formData = new FormData();
     formData.append("audio", audio, "recorded_audio.webm");
 
-    fetch("http://127.0.0.1:5000/stt", {
+    fetch(`${BACKEND_URL}/tts`, {
         method: "POST",
         body: formData
     })
@@ -56,7 +56,7 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
         initial_question = false;
     }
 
-    fetch("http://127.0.0.1:5000/reply", {
+    fetch(`${BACKEND_URL}/tts`, {
         method: "POST",
         body: JSON.stringify({ question, answer, index, condidate_field, condidate_speciality, num_questions }),
         headers: { "Content-Type": "application/json" }
@@ -142,7 +142,7 @@ function Timer() {
             }
             red = !red;
         }
-    }, 10);
+    }, 1000);
 }
 
 function SlowTyping(text_letters) {

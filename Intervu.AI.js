@@ -58,6 +58,8 @@ const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview
 I'll ask you a few questions to help you practice and improve your interview skills. So how \
 do you feel?";
 
+const BACKEND_URL = 'https://e4dd7e71-6bfb-4a93-97ef-c2119e2fc968-00-14at7dda96n.picard.replit.dev:8000';
+
 let user_time_allowed = 40;
 let interviewEnded = false;
 let initial_question = true;
