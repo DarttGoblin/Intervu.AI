@@ -23,8 +23,7 @@ function TTS(text) {
     })
     .catch(err => {
             console.error(err);
-            SlowTyping("The backend server is not running. Will be soon! Watch demo instead.");
-            // SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+            SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
         }
     );
 }
@@ -45,8 +44,7 @@ function STT(audio) {
     .catch(err => 
         {
             console.error("STT error:", err)
-            SlowTyping("The backend server is not running. Will be soon! Watch demo instead.");
-            // SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+            SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
         });
 }
 
@@ -75,8 +73,7 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
     })
     .catch(err => {
         console.error("STT error:", err)
-        SlowTyping("The backend server is not running. Will be soon! Watch demo instead.");
-        // SlowTyping("Oops! Something went wrong on my side. Don't worry, it's not your fault, please try again and I'll get us back on track!");
+        SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
     });
 
 }
