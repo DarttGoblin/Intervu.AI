@@ -1,7 +1,7 @@
-# 🎥 Intervu.ai  
+# 🎥 Intervu.ai – Frontend  
 
-Intervu.ai is an **AI-powered mock interview assistant** that helps you practice interview skills in a realistic and interactive way.  
-You’ll get live questions, a timer, video recording, and even AI-generated feedback — all in your browser. 🚀  
+This is the **frontend** of Intervu.ai, an AI-powered mock interview assistant.  
+It provides the interactive **user interface** for practicing interviews directly in your browser. 🚀  
 
 ---
 
@@ -9,18 +9,15 @@ You’ll get live questions, a timer, video recording, and even AI-generated fee
 
 - 🖥️ **Video Interview Mode** – Activate your camera and simulate a real interview.  
 - ⏱️ **Built-in Timer** – Stay on track with a countdown for each question.  
-- 🧠 **AI Integration** – Generate interview questions and analyze your answers.  
-- 🔊 **Text-to-Speech** – Questions can be spoken out loud for a more natural experience.
-- 🎤 **Speech-to-Text** – Record your answers and let AI transcribe them.
+- 🔊 **Text-to-Speech Support** – Play questions aloud for a natural interview flow.  
+- 🎤 **Speech-to-Text Integration** – Record and transcribe answers in real time.  
+- 🎨 **Clean UI with Vanilla JS** – Lightweight and responsive user experience.  
 
+---
 
-## dependencies  
-Backend: Flask, gTTS, Whisper  
-Frontend: vanilla JS
+## 🛠️ Tech Stack  
 
-## 🌱 Roadmap  
+- **Frontend**: HTML, CSS, Vanilla JavaScript  
+- **API Integration**: Communicates with the backend (Flask) for AI, TTS, and STT features  
 
-- [ ] Add AI-driven feedback on interview answers  
-- [ ] Multi-language support 🌍  
-- [ ] Save and review past interviews  
-- [ ] Integration with job-specific question sets
+---
