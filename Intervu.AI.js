@@ -58,11 +58,13 @@ const initial_speech = "Hello, welcome to Intervu.ai. I'm your virtual interview
 I'll ask you a few questions to help you practice and improve your interview skills. So how \
 do you feel?";
 
-const BACKEND_URL = 'https://e4dd7e71-6bfb-4a93-97ef-c2119e2fc968-00-14at7dda96n.picard.replit.dev:8000';
+// const BACKEND_URL = 'https://e4dd7e71-6bfb-4a93-97ef-c2119e2fc968-00-14at7dda96n.picard.replit.dev:8000'; // not working currently
+const BACKEND_URL = 'http://localhost:5000';
 
 let user_time_allowed = 40;
 let interviewEnded = false;
 let initial_question = true;
+let error_happened = false;
 let begin = false;
 let mode;
 let duration;
@@ -104,6 +106,5 @@ start_interview.onclick = function() {
 }
 
 watch_demo.onclick = function() {
-    alert('Demo not available yet! Will be soon!');
-    // window.open('', '_blank');
+    window.open('https://drive.google.com/file/d/1Sca6_ZdL-0oa5RktWz7zrjE9Fq2A_gBx/view?usp=sharing', '_blank');
 }

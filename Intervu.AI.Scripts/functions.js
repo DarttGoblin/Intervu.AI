@@ -24,6 +24,7 @@ function TTS(text) {
     .catch(err => {
             console.error(err);
             SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
+            error_happened = true;
         }
     );
 }
@@ -32,7 +33,7 @@ function STT(audio) {
     const formData = new FormData();
     formData.append("audio", audio, "recorded_audio.webm");
 
-    fetch(`${BACKEND_URL}/tts`, {
+    fetch(`${BACKEND_URL}/stt`, {
         method: "POST",
         body: formData
     })
@@ -41,11 +42,11 @@ function STT(audio) {
         console.log('user response: ', data.text);
         ReplyToCondidate(question, data.text, question_index, field_select.value, speciality_select.value, num_questions);
     })
-    .catch(err => 
-        {
-            console.error("STT error:", err)
-            SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
-        });
+    .catch(err => {
+        console.error("STT error:", err)
+        SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
+        error_happened = true;
+    })
 }
 
 function ReplyToCondidate(question, answer, index, condidate_field, condidate_speciality, num_questions) {
@@ -54,7 +55,7 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
         initial_question = false;
     }
 
-    fetch(`${BACKEND_URL}/tts`, {
+    fetch(`${BACKEND_URL}/reply`, {
         method: "POST",
         body: JSON.stringify({ question, answer, index, condidate_field, condidate_speciality, num_questions }),
         headers: { "Content-Type": "application/json" }
@@ -74,8 +75,8 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
     .catch(err => {
         console.error("STT error:", err)
         SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
-    });
-
+        error_happened = true;
+    })
 }
 
 function GenerateFieldOptions() {
@@ -126,6 +127,10 @@ function Timer() {
         if (totalSeconds < 0) {
             clearInterval(interval);
             EndInterview();
+        }
+
+        if (error_happened) {
+            clearInterval(interval);
         }
 
         if (mins < 5) {
