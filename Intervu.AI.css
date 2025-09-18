@@ -194,7 +194,7 @@ i {
     width: 100%;
 }
 
-.finished {
+.finished, .refresh {
     width: fit-content;
     padding: 10px 30px;
     cursor: pointer;
@@ -203,6 +203,11 @@ i {
     color: white;
     border: none;
     border-radius: var(--main-border-radius);
+}
+
+.refresh {
+    background-color: black;
+    color: white;
 }
 
 .bot-state-span {

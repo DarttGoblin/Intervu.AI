@@ -24,6 +24,8 @@ function TTS(text) {
     .catch(err => {
             console.error(err);
             SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
+            setTimeout(() => {RefreshButton();}, 4000);
+
             error_happened = true;
         }
     );
@@ -45,6 +47,7 @@ function STT(audio) {
     .catch(err => {
         console.error("STT error:", err)
         SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
+        setTimeout(() => {RefreshButton();}, 4000);
         error_happened = true;
     })
 }
@@ -75,6 +78,7 @@ function ReplyToCondidate(question, answer, index, condidate_field, condidate_sp
     .catch(err => {
         console.error("STT error:", err)
         SlowTyping("Oops! Something went wrong. please try again or else, watch the demo 😅");
+        setTimeout(() => {RefreshButton();}, 4000);
         error_happened = true;
     })
 }
@@ -314,6 +318,17 @@ function MovableVideo() {
     document.addEventListener("mouseup", () => {
         isDragging = false;
     });
+}
+
+function RefreshButton() {
+    const refresh = document.createElement('button');
+    refresh.textContent = 'Refresh the page';
+    refresh.classList.add('refresh');
+    text_container.appendChild(refresh);
+
+    refresh.onclick = function() {
+        location.reload();    
+    }
 }
 
 function LastSpeech() {
