@@ -229,7 +229,7 @@ i {
     margin-top: 70px;
 }
 
-.start-interview, .watch-demo {
+.start-interview, .git-repo, .watch-demo {
     background-color: var(--main-color);
     color: white;
     border-radius: var(--main-border-radius);
@@ -241,11 +241,11 @@ i {
     transition: padding var(--main-transition);
 }
 
-.start-interview:hover, .watch-demo:hover {
+.start-interview:hover, .git-repo:hover, .watch-demo:hover {
     padding: 10px 50px;
 }
 
-.watch-demo {
+.watch-demo, .git-repo {
     background-color: black;
 }
 

@@ -4,6 +4,7 @@ const bright_mode = document.querySelector('.bright-mode');
 const start_container = document.querySelector('.start-container');
 const start_interview = document.querySelector('.start-interview');
 const watch_demo = document.querySelector('.watch-demo');
+const git_repo = document.querySelector('.git-repo');
 const field_select = document.querySelector('.field-select');
 const speciality_select = document.querySelector('.speciality-select');
 const duration_select = document.querySelector('.duration-select');
@@ -102,6 +103,10 @@ start_interview.onclick = function() {
             clearInterval(waiting);
         }
     }, 500);
+}
+
+git_repo.onclick = function() {
+    window.open('https://github.com/DarttGoblin/Intervu.AI/tree/main/Intervu.AI.Backend', '_blank');
 }
 
 watch_demo.onclick = function() {

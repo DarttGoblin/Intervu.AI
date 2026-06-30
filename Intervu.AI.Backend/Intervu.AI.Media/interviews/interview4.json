@@ -1,0 +1,47 @@
+[
+    {
+        "question": "Hello, welcome to Intervu.ai. I'm your virtual interview assistant. I'll ask you a few questions to help you practice and improve your interview skills. So how do you feel?",
+        "answer": "Define thank you so much for asking I'm so pleased to be in this interview",
+        "question_index": 1,
+        "score": 100,
+        "explanation": "The candidate's response was polite, enthusiastic, and appropriate for an opening greeting. They expressed gratitude and excitement for the interview.",
+        "feedback": "Great to hear! Your enthusiasm is a wonderful start. We appreciate your positive attitude as we begin this practice session.",
+        "next_question": "Could you please tell me a bit about yourself and what motivated you to pursue a career in Machine Learning, particularly in NLP?"
+    },
+    {
+        "question": "",
+        "answer": "I've been obsessed about Charles boss since I was a kid I like to wait they were talking like humans I generally like to the concepts of artificial intelligence and machine learning how to make a computer a machine intelligent and specifically natural language processing system how to make computer understand your language and also when I watch movies of Science Fiction and how they imagine simulator behavior of human beings and talk",
+        "question_index": 2,
+        "score": 85,
+        "explanation": "The candidate articulates a clear and genuine interest in NLP, linking it to the ability of machines to understand and generate human language, and drawing inspiration from science fiction.",
+        "feedback": "Your response highlights a key NLP goal: enabling computers to understand and generate human language, driven by a fascination with AI's ability to simulate human-like interaction.",
+        "next_question": "Can you explain what tokenization is in the context of Natural Language Processing?"
+    },
+    {
+        "question": "",
+        "answer": "organization is the process of cutting a sentence or text into bunch of chunks or tokens and tokens Can Be words can be letters can be samples like the politician symbols in order to pass them to a model to 3 minutes or to a trained model to handle the inputs and making out with out of it",
+        "question_index": 3,
+        "score": 85,
+        "explanation": "The candidate accurately defined tokenization as splitting text into tokens (words, letters, symbols) for model input, demonstrating a fundamental understanding of its purpose in NLP.",
+        "feedback": "Tokenization splits text into units (tokens) like words, subwords, or characters, which is fundamental for preparing text for NLP models.",
+        "next_question": "What are the main differences between lemmatization and stemming in NLP?"
+    },
+    {
+        "question": "",
+        "answer": "",
+        "question_index": 4,
+        "score": 0,
+        "explanation": "The candidate provided an empty response to the question, indicating they likely skipped it or had no answer.",
+        "feedback": "It seems you didn't provide a response for this question. It's okay to skip if you're unsure.",
+        "next_question": "What are word embeddings, and why are they important in NLP?"
+    },
+    {
+        "question": "",
+        "answer": "and that's it this is to demonstration",
+        "question_index": 5,
+        "score": 0,
+        "explanation": "No question was provided, making it impossible to evaluate the candidate's response in context. The response appears to be an out-of-context statement.",
+        "feedback": "Please provide a question for evaluation. The candidate's response 'and that's it this is to demonstration' could not be assessed.",
+        "next_question": "What are some common applications of transformer models in NLP?"
+    }
+]
